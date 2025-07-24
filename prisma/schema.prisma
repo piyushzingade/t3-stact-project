@@ -81,6 +81,7 @@ model Show {
     title       String
     description String?
     thumbnail   String?   
+    price       Int
     location    String
     date        DateTime
     createdAt   DateTime @default(now())

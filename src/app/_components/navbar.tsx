@@ -11,33 +11,33 @@ import Link from "next/link";
 import { Avatar, AvatarImage } from "~/components/ui/avatar";
 import { auth, signOut } from "~/server/auth";
 import { signout } from "./signout";
+import Image from "next/image";
+import Logo from "./Logo";
 
-export default async function NavBar() {
+export default async function NavBar({className}  : {className : string}) {
   const session = await auth();
 
   console.log(session?.user);
   return (
-    <nav className="container mx-auto flex justify-between p-6">
-      <div className="flex justify-between gap-x-10">
+    <nav
+      className={`${className} container mx-auto flex items-center justify-between p-6`}
+    >
+      {/* Left Side: Logo + Links */}
+      <div className="flex items-center gap-x-10">
         {/* Logo */}
-        <div>Logo</div>
-        {/* Show */}
-        <div>
-          <Link href="/shows" className="hover:underline">
-            Shows
-          </Link>
-        </div>
-        {/* Create */}
-        <div>
-          {/* Show can only be created by admin */}
-          <Link href="/create" className="hover:underline">
-            Create
-          </Link>
-        </div>
+        <Logo/>
+        
+
+        {/* Links */}
+        <Link href="/shows" className="hover:underline">
+          Shows
+        </Link>
+        <Link href="/create" className="hover:underline">
+          Create
+        </Link>
       </div>
 
-      {/* User login */}
-      {/* Avatatr */}
+      {/* Right Side: User Avatar Dropdown */}
       <div>
         <DropdownMenu>
           <DropdownMenuTrigger className="cursor-pointer">
@@ -45,7 +45,7 @@ export default async function NavBar() {
               <AvatarImage
                 src={session?.user.image ?? ""}
                 alt="user profile photo"
-              ></AvatarImage>
+              />
               <AvatarFallback>D</AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>

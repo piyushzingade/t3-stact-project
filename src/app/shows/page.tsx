@@ -1,6 +1,6 @@
 import { api } from "~/trpc/server";
 import NavBar from "../_components/navbar";
-import type { Show } from "@prisma/client";
+import ShowComponent from "./_components/ShowComponents";
 
 
 export default async function ShowPage() {
@@ -9,12 +9,14 @@ export default async function ShowPage() {
   return (
     <main className="flex min-h-screen flex-col items-center bg-white bg-gradient-to-b text-black">
       <div className="container flex flex-col items-center justify-between">
-        <NavBar />
+        <NavBar className="text-black" />
 
         {shows.length > 0 ? (
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 ">
             {shows.map((show) => (
-              <ShowComponent key={show.id} show={show} />
+              <div key={show.id} className="">
+                <ShowComponent show={show} />
+              </div>
             ))}
           </div>
         ) : (
@@ -29,24 +31,4 @@ export default async function ShowPage() {
   );
 }
 
-function ShowComponent({ show }: { show: Show }) {
-  return (
-    <div className="relative flex flex-col overflow-clip rounded-t-2xl border border-black">
-      <div className="aspect-video max-h-36">
-        <img
-          height={200}
-          width={200 * 1.6}
-          className="aspect-video object-cover"
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJxQph8t4H-BaPQ741tTVgpu2alKa-LGivGw&s"
-        />
-      </div>
-      <div className="absolute top-2 right-2 rounded-full bg-white px-1 text-xs">
-        ₹ {show.location}
-      </div>
-      <div className="p-1">
-        <div className="text-sm">{show.title}</div>
-        <div className="truncate text-xs">{show.description}</div>
-      </div>
-    </div>
-  );
-}
+

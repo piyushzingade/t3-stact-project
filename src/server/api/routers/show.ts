@@ -27,6 +27,7 @@ export const showRouter = createTRPCRouter({
             description : input.description,
             thumbnail : input.thumbnail,
             location : input.location,
+            price: input.price,
             date: new Date(input.date),
             createdById: ctx.session.user.id,
           },
@@ -40,10 +41,21 @@ export const showRouter = createTRPCRouter({
       }
     }),
     
-  get: protectedProcedure.query(async ({ ctx }) => {
+  get: protectedProcedure
+  .query(async ({ ctx }) => {
     const shows = await ctx.db.show.findMany();
     return shows ?? [];
+  }),
+
+  getById : protectedProcedure
+  .input(z.object({ id: z.number() }))
+  .query(async ({ ctx , input }) => {
+    return await ctx.db.show.findFirst({
+      where :{
+        id: input.id,
+      }
+    })
   })
+   
 })
 
-  

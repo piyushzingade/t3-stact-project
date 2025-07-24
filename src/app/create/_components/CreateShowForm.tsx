@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { isTypeOnlyExportDeclaration } from "typescript";
 import type { z } from "zod";
 import  { showSchema } from "~/common/zod/showSchema";
 
@@ -29,13 +30,13 @@ export default function CreateShowForm() {
       title: "",
       description: "",
       location: "",
+      price: 0,
       thumbnail: "",
       date:new Date().toISOString().split("T")[0], // Default to today's date in YYYY-MM-DD format
     },
   });
 
   async function onSubmit(values: z.infer<typeof showSchema>) {
- 
     form.reset();
     console.log(values);
     const out = await mutateAsync(values);
@@ -44,8 +45,17 @@ export default function CreateShowForm() {
   }
 
   return (
-    <Form {...form} >
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        // onSubmit={(e)=>{
+        //   e.preventDefault();
+        //   const values = form.getValues();
+        //   console.log(typeof values.price)
+        // }}
+
+        className="space-y-8"
+      >
         <FormField
           control={form.control}
           name="title"
@@ -99,6 +109,26 @@ export default function CreateShowForm() {
 
         <FormField
           control={form.control}
+          name="price"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Price</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="Enter the Price of the show..."
+                  type="number"
+                  {...field}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                />
+                {/* <input type="number" placeholder="Enter number" {...field} /> */}
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
           name="location"
           render={({ field }) => (
             <FormItem>
@@ -128,8 +158,9 @@ export default function CreateShowForm() {
           )}
         />
 
-        
-        <Button type="submit">Submit</Button>
+        <Button type="submit" className="cursor-pointer">
+          Submit
+        </Button>
       </form>
     </Form>
   );
